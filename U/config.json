@@ -1,0 +1,12 @@
+{
+    "EXAMPLE": {
+        "param": {
+            "alpha": "(0,1]",
+            "kernel_size": "[3,11]",
+            "iterations": "[100,1000]"
+        }
+    },
+    "Assurance": {
+        "AMBE": "[-100,100]"
+    }
+}
