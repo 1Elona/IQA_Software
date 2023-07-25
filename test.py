@@ -38,9 +38,9 @@ class Ui_Dialog(object):
         self.login_button.setGeometry(QtCore.QRect(300, 370, 41, 41))
 
         # exe_path = os.path.dirname(os.path.abspath(sys.argv[0]))
-        #生产环境使用这个代码
+        #生产环境使用这个代
         exe_path= unify_path()[0]
-        #开发环境使用这个代
+        #开发环境使用这个代码
         # exe_path= unify_path()
 
 
