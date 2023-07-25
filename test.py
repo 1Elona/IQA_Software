@@ -39,9 +39,9 @@ class Ui_Dialog(object):
 
         # exe_path = os.path.dirname(os.path.abspath(sys.argv[0]))
         #生产环境使用这个代
-        exe_path= unify_path()[0]
+        # exe_path= unify_path()[0]
         #开发环境使用这个代码
-        # exe_path= unify_path()
+        exe_path= unify_path()
 
 
         button_path = os.path.join(exe_path, 'img/222.png')
