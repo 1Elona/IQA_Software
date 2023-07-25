@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f27ea50-2cac-4186-b87e-af095bd1f339" name="更改" comment="更改">
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -323,8 +323,17 @@
       <workItem from="1689780884451" duration="4076000" />
       <workItem from="1689817658224" duration="6031000" />
       <workItem from="1689903303312" duration="618000" />
-      <workItem from="1690182315093" duration="3153000" />
+      <workItem from="1690182315093" duration="4002000" />
+      <workItem from="1690247876400" duration="861000" />
     </task>
+    <task id="LOCAL-00001" summary="更改">
+      <created>1690190368625</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1690190368625</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -340,6 +349,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="更改" />
+    <option name="LAST_COMMIT_MESSAGE" value="更改" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
