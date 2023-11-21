@@ -183,19 +183,20 @@ class Ui_Setting(object):
 
     def SettingToHome(self):
         dic = {}
+        #获取用户的输入值
         for i, (key_dict, value_dict) in zip(range(1, 1 + self.index_num), self.index_name.items()):
             lineedit = self.findChild(QtWidgets.QLineEdit, f"lineEdit_{i}")
             input = lineedit.text()
             dic[key_dict] = input
         self.switch_window.emit((dic,self.algo))
 
-
+#从config中解析数据
     def init_index_by_config(self):
         data= Util.get_data_from_config(self.algo)
         info = Util.get_algorithm_params_info(data,self.algo)
         #某种算法的参数个数：
-        self.index_num = info[1]
-        self.index_name = info[0] #dict
+        self.index_num = info.length
+        self.index_name = info.params #dict
         # 循环创建label和lineEdit
         # zip方法一次可以同时遍历一个列表和数组
         for i, (key_dict, value_dict) in zip(range(1,1+self.index_num), self.index_name.items()):

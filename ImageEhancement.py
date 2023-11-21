@@ -117,14 +117,19 @@ import handleuserinput
 import Database
 
 class ImageEnhancement:
-    def __init__(self, input_folder, output_folder, algname, alpha, kernel_size, iterations):
+    def __init__(self, input_folder, output_folder, algname,params):
         self.data = Util.get_data_from_config(algname)
         self.input_folder = input_folder
         self.output_folder = output_folder
         self.algname = algname
-        self.alpha = alpha
-        self.kernel_size = kernel_size
-        self.iterations = iterations
+        self.params = params
+        # self.alpha = alpha
+        # self.kernel_size = kernel_size
+        # self.iterations = iterations
+        self.filters = {
+            "EXAMPLE": self.example_filter,
+            "THRESHOLD": self.threshold_filter,
+        }
 
     def is_valid(self, value, range_str):
         range_str = range_str.strip()
@@ -149,19 +154,46 @@ class ImageEnhancement:
 
         return True
 
-    def apply_filter(self, image):
-        if self.algname == "EXAMPLE":
-            filtered = cv2.GaussianBlur(image, (self.kernel_size, self.kernel_size), 0)
-        elif self.filter_type == "THRESHOLD":
-            _, filtered = cv2.threshold(image, self.threshold, 255, cv2.THRESH_BINARY)
-        else:
-            filtered = image
+    def example_filter(self, image):
+        #如何去使用这个参数由管理员自己决定
+        print('该算法收到的param列表:',self.param,sep=' ')
+        alpha = self.params[0]
+        kernel_size = self.params[1]  # 获取kernel_size参数，如果不存在就使用默认值5
+        iterations = self.params[2]  # 获取iterations参
+        filtered = cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
+        return self.iterative_filter(filtered)
 
+    def iterative_filter(self, image):
         for i in range(self.iterations):
-            filtered = cv2.erode(filtered, None, iterations=1)
-            filtered = cv2.dilate(filtered, None, iterations=1)
+            image = cv2.erode(image, None, iterations=1)
+            image = cv2.dilate(image, None, iterations=1)
+        return image
 
-        return filtered
+    def threshold_filter(self, image):
+        _, filtered = cv2.threshold(image, self.threshold, 255, cv2.THRESH_BINARY)
+        return self.iterative_filter(filtered)
+
+    def process_image(self, file):
+        try:
+            if self.is_image_file(file):
+                input_file = os.path.join(self.input_folder, file)
+                file_name, file_ext = os.path.splitext(file)
+                output_file = os.path.join(self.output_folder,
+                                           f"{file_name}%%{self.algname}%%{self.alpha}%%{self.iterations}%%{self.kernel_size}{file_ext}")
+                if os.path.basename(output_file) in os.listdir(self.output_folder):
+                    return
+
+                img = cv2.imread(input_file, -1)
+                filtered_img = self.apply_filter(img)
+                cv2.imwrite(output_file, filtered_img)
+        except Exception as e:
+            print(f"文件{input_file}可能出问题", e)
+
+    def is_image_file(self, file):
+        return file.endswith('.jpg') or file.endswith('.png')
+
+    def apply_filter(self, image):
+        return self.filters[self.algname](image)
 
     def process_image(self, file):
         try:

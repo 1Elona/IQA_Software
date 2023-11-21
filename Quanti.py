@@ -198,7 +198,7 @@ def test_iqa(parameters, original_path, result_path):
 
     li.append(Quantitation.psnr(x, y))
 
-    with open(os.path.join(Util.unify_path()[1],'quant.csv'), 'a', encoding='utf-8', newline='') as f:
+    with open(os.path.join(Util.unify_path().user_path,'quant.csv'), 'a', encoding='utf-8', newline='') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(li)
 
@@ -238,7 +238,7 @@ def get_loss(index_num,inputf,outputf):
             print('End')
 
 def quant(alg_index_num,inputf,outputf):
-    f = open(os.path.join(Util.unify_path()[1],'quant.csv'), 'w', encoding='utf-8', newline='')
+    f = open(os.path.join(Util.unify_path().user_path,'quant.csv'), 'w', encoding='utf-8', newline='')
     csv_writer = csv.writer(f)
 
     title = []

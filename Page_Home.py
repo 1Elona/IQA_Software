@@ -65,9 +65,9 @@ class Ui_Home(object):
         MainWindow.resize(1256, 868)
 
         #一次定义多处使用
-        self.edit = os.path.join(Util.unify_path()[0], 'need/edit.png')
-        self.add = os.path.join(Util.unify_path()[0], 'need/add-circle.png')
-        self.ashbin = os.path.join(Util.unify_path()[0], 'need/ashbin.png')
+        self.edit = os.path.join(Util.unify_path().application_path, 'need/edit.png')
+        self.add = os.path.join(Util.unify_path().application_path, 'need/add-circle.png')
+        self.ashbin = os.path.join(Util.unify_path().application_path, 'need/ashbin.png')
 
 
 
@@ -143,7 +143,7 @@ class Ui_Home(object):
         self.widget_6 = QtWidgets.QWidget(self.frame_5)
         self.widget_6.setMinimumSize(QtCore.QSize(65, 65))
         self.widget_6.setMaximumSize(QtCore.QSize(65, 65))
-        widget_6_logo = os.path.join(Util.unify_path()[0], 'img/img/image.png')
+        widget_6_logo = os.path.join(Util.unify_path().application_path, 'img/img/image.png')
 
         self.widget_6.setStyleSheet(f"image: url({widget_6_logo});\n"
  "border-radius:32px;\n"
@@ -491,9 +491,9 @@ class Ui_Home(object):
 
 #从新建主任务点击完成（数据库已添加）后调用
     def add_task(self):
-        # edit = os.path.join(Util.unify_path()[0], 'need/edit.png')
-        # add = os.path.join(Util.unify_path()[0], 'need/add-circle.png')
-        # ashbin = os.path.join(Util.unify_path()[0], 'need/ashbin.png')
+        # edit = os.path.join(Util.unify_path().application_path, 'need/edit.png')
+        # add = os.path.join(Util.unify_path().application_path, 'need/add-circle.png')
+        # ashbin = os.path.join(Util.unify_path().application_path, 'need/ashbin.png')
 
         task = TaskWindow(self.edit, 1,self.add ,self.ashbin)
 

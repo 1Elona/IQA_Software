@@ -27,17 +27,17 @@ class TaskWindow_2(QWidget):
         if status == 1:
             #校准路径
             img_src2 = 'need/play.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
 
         if status == 2:
             img_src2 = 'need/stop.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
         if status == 3:
             img_src2 = 'need/warning.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
         if status == 4:
             img_src2 = 'need/success.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
         self.button_edit = QPushButton()
         self.pixmap = QPixmap(img_src1)
         self.button_edit.setIcon(QtGui.QIcon(self.pixmap))

@@ -28,32 +28,36 @@ from Page_SelfDefining import Ui_SelfDefining
 from Page_Setting import Ui_Setting
 from TaskWindow import TaskWindow
 from Util import get_data_from_config
-from test import Ui_Dialog
+from Page_Login import Ui_Dialog
+from Page_Regist import Ui_Regist
 
 
 #原图名可以做成超链接查看原图 删除子数据
 #删除主任务的时候其生成的子任务也要删除 且释放的序号需要还原
-#点击加号展示设置的页面 进行(查 改)
-#算法设置页面
-#指标选择页面  把这两个页面的数据保存到数据库并展示
-#点击开始运行进行加载 实现多线程
+#算法设置页面介绍算法 管理员端配置
+#指标选择页面 介绍指标 管理员端配置
+# 把这两个页面的数据保存到数据库并展示
+# 点击开始运行进行加载 实现多进程
 #美化界面
-#后端接收参数并且调用c++函数进行处理
+#预览图片界面
+# 分页
+#进度条
+
+
+
+#登录页
 class Login(QMainWindow,Ui_Dialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.admin = "admin"
         self.Password = "123456"
-        self.login_button.clicked.connect(self.login_button1)
-
-
-
-    def login_button1(self):
+        self.login_button.clicked.connect(self.login)
+        self.regist_button.clicked.connect(self.show_regist)
+    def login(self):
         if self.lineEdit.text() == "":
             QMessageBox.warning(self, '警告', '密码不能为空，请输入！')
             return None
-
         if (self.lineEdit.text() == self.Password) and self.lineEdit_2.text() == self.admin:
             # 1打开新窗口
             self.switch_window.emit()
@@ -63,6 +67,18 @@ class Login(QMainWindow,Ui_Dialog):
             QMessageBox.critical(self, '错误', '密码错误！')
             self.lineEdit.clear()
             return None
+    def show_regist(self):
+            # 1打开新窗口
+            self.switch_windowto_regist.emit()
+            # 2关闭本窗口
+            self.close()
+class Regist(QMainWindow,Ui_Regist):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.register_button.clicked.connect(self.regist)
+    def regist(self):
+        print("66")
 
 class MainWindow(QMainWindow,Ui_Home):
 
@@ -73,7 +89,7 @@ class MainWindow(QMainWindow,Ui_Home):
         #刚进页面都调用show_maintask,show_subtask
         super().show_maintask()
         super().show_subtask()
-
+#新建任务页
 class NewMainTask(QMainWindow,Ui_NewMaintask):
 
     def __init__(self,row):
@@ -84,9 +100,9 @@ class NewMainTask(QMainWindow,Ui_NewMaintask):
 
 class TaskWindoww(QMainWindow, TaskWindow):
     def __init__(self):
-        edit = os.path.join(unify_path()[0], 'need/edit.png')
-        add = os.path.join(unify_path()[0], 'need/add-circle.png')
-        ashbin = os.path.join(unify_path()[0], 'need/ashbin.png')
+        edit = os.path.join(unify_path().application_path, 'need/edit.png')
+        add = os.path.join(unify_path().application_path, 'need/add-circle.png')
+        ashbin = os.path.join(unify_path().application_path, 'need/ashbin.png')
 
         TaskWindow.__init__(self, edit, 1, add, ashbin)
 
@@ -122,6 +138,13 @@ class Controller:
         self.window_Login = Login()
         self.window_Login.show()
         self.window_Login.switch_window.connect(self.show_MainWindow)
+        self.window_Login.switch_windowto_regist.connect(self.show_Regist)
+
+    def show_Regist(self):
+        self.window_Regist = Regist()
+        self.window_Regist.show()
+
+
 
     def show_MainWindow(self):
         self.window_Main = MainWindow()
@@ -202,12 +225,12 @@ class Controller:
         print("传来了"+a)
         if not(get_data_from_config(a)):
             QMessageBox.warning(self.window_SelfDefining,'警告', '联系管理员添加算法')
-            sys.exit()
+            return
         self.window_Setting.init_index_by_config()
         self.window_SelfDefining.hide()
 
 
-        # 完成
+        # 点击完成呴 这里使用了两种方法进行传递参数 switch_window和partial
         self.window_Setting.switch_window.connect(partial(self.back_to_SelfDef_fromSetting,row))
 
         self.window_Setting.show()
@@ -264,9 +287,9 @@ class Controller:
     # 点击完成后
     def back_to_SelfDef_fromSetting(self,row,para):
         self.window_Setting.close()
-        #para[0] 是字典
+        #para[0] 是参数的取值字典
         for key,value in para[0].items():
-            if not value is "":
+            if value != "":
                 para[0][key] = handleuserinput.handle(value)
             else:
                 QMessageBox.warning(self.window_SelfDefining, '警告', '输入参数不能为空')

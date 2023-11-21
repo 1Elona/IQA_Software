@@ -1,21 +1,15 @@
 import os
 
-from PyQt5.QtSql import  QSqlDriver
-
-#最好不要文件名和类名一样
-
-import Database
-import Page_Home
-
-#当主任务设置好后点击加号则创建Subtask+_1的子任务表
-import Page_SelfDefining
+from PyQt5.QtSql import QSqlDriver
+# 当主任务设置好后点击加号则创建Subtask+_1的子任务表
 # sub_id从1开始自增
 import Util
+from Page_Setting import Ui_Setting
+# 最好不要文件名和类名一样
 
 sub_id = 1
 
 import sqlite3
-from queue import Queue
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 #连接池
 def initialize_database(db_path):
@@ -61,23 +55,22 @@ class ConnectionPool(object):
         if(self.__initialized): return
         self.__initialized = True
         #数据库所在的目录
-        db_path = Util.unify_path()[1]
+        db_path = Util.unify_path().user_path
         self.dbName = initialize_database(db_path)
         #不能把数据库放在临时文件夹
         # self.dbName = os.path.join(Util.unify_path(),'test.db')
         self.maxPoolSize = 5
         self.timeout = 1000
         self.pool = []
-
         for i in range(self.maxPoolSize):
             db = QSqlDatabase.addDatabase('QSQLITE', 'connectionPool%d' % i)
             db.setDatabaseName(self.dbName)
-            print('当前的连接',self.dbName,sep=' ')
             if not db.open():
                 error = db.lastError().text()
                 print(error)
                 raise ValueError('Unable to open database')
             self.pool.append(db)
+        print('当前的连接', self.dbName, sep=' ')
 
     def acquire(self):
         for db in self.pool:
@@ -128,7 +121,7 @@ def create_SubTaskDatabase(user_param_input_value,mainid):
 
     return True
 #add_column 实现子任务的动态参数
-def add_column(columns, query):  # column是自己定义的规范即 字段名 数据结构 count_p是字段的数量
+def add_column(columns, query):
 
     for a in columns:
         query.exec_("ALTER TABLE {} ADD COLUMN {} TEXT;".format(tb_name,a))
@@ -403,3 +396,19 @@ def delete_subdataByrow(row,subtableid):
     print("delete from {} where subid in (select subid from {} order by subid limit {},1);".format(tablename,tablename,row-1))
     if not query.exec_():
         print("Query execution failed with error: " + query.lastError().text())
+def get_param_from_database():
+    db = ConnectionPool.instance().acquire()
+    query = QSqlQuery(db)
+    query.exec_("PRAGMA table_info(Subtask1)")  # 替换为你的表名
+
+    columns = []
+    while query.next():
+        columns.append(query.value(1))
+
+    if 'Index_Name' in columns:
+        index_position = columns.index('Index_Name')
+        fields_after_index_name = columns[index_position + 1:]
+        return fields_after_index_name
+    else:
+        print("Field 'Index_Name' not found.")
+        return []

@@ -23,17 +23,17 @@ class TaskWindow(QWidget):
         if status == 1:
             #校准路径
             img_src2 = 'need/play.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
 
         if status == 2:
             img_src2 = 'need/stop.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
         if status == 3:
             img_src2 = 'need/warning.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
         if status == 4:
             img_src2 = 'need/success.png'
-            img_src2 = os.path.join(Util.unify_path()[0], img_src2)
+            img_src2 = os.path.join(Util.unify_path().application_path, img_src2)
 
 
 #创建四个按钮
@@ -109,12 +109,12 @@ class TaskWindow(QWidget):
 
     def status_change(self):
         if self.status ==1:
-            img_src2 = os.path.join(Util.unify_path()[0], 'need/stop.png')
+            img_src2 = os.path.join(Util.unify_path().application_path, 'need/stop.png')
             self.pixmap = QPixmap(img_src2)
             self.button_status.setIcon(QtGui.QIcon(self.pixmap))
             self.status =2
         else:
-            img_src2 = os.path.join(Util.unify_path()[0], 'need/play.png')
+            img_src2 = os.path.join(Util.unify_path().application_path, 'need/play.png')
             self.pixmap = QPixmap(img_src2)
             self.button_status.setIcon(QtGui.QIcon(self.pixmap))
             self.status = 1
@@ -128,21 +128,20 @@ class TaskWindow(QWidget):
         subtask_data = Database.selectall_subdataById(self.row)
         if not subtask_data:
             QMessageBox.warning(self, '提示', '未选择算法')
-            raise NameError("algname is not defined")
-
+            # raise NameError("algname is not defined")
         for subtask in subtask_data:
             subid = subtask["Subid"]
 
             global algname
-
+            param = Database.get_param_from_database()
             algname = subtask["Alg_Name"]
-            alpha = float(subtask["alpha"])
-            kernel_size = int(subtask["kernel_size"])
-            iterations = int(subtask["iterations"])
+            # alpha = float(subtask["alpha"])
+            # kernel_size = int(subtask["kernel_size"])
+            # iterations = int(subtask["iterations"])
 
             # 创建ImageEnhancement实例并执行图像增强操作
 
-            image_enhancement = ImageEnhancement(input_folder, output_folder, algname, alpha, kernel_size, iterations)
+            image_enhancement = ImageEnhancement(input_folder, output_folder, algname, param)
             image_enhancement.apply_image_enhancement()
 
 
