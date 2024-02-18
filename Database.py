@@ -1,3 +1,4 @@
+import hashlib
 import os
 
 from PyQt5.QtSql import QSqlDriver
@@ -412,3 +413,66 @@ def get_param_from_database():
     else:
         print("Field 'Index_Name' not found.")
         return []
+
+
+def hash_password(password):
+    # 使用 SHA-256 哈希算法
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def registPerson(username, password,yhsf):
+    db = ConnectionPool.instance().acquire()
+    query = QSqlQuery(db)
+
+    # 检查用户名是否已存在
+    query.prepare("SELECT COUNT(*) FROM userinfo WHERE username = :username")
+    query.bindValue(":username", username)
+    if not query.exec_():
+        print("Query execution failed with error: " + query.lastError().text())
+        ConnectionPool.instance().release(db)
+        return
+
+    query.next()
+    if query.value(0) > 0:
+        print("用户名已存在")
+        ConnectionPool.instance().release(db)
+        return 1
+
+    # 用户名不存在，继续注册
+    hashed_password = hash_password(password)
+    query.prepare("INSERT INTO userinfo (username, password,yhsf) VALUES (:username, :password,:yhsf)")
+    query.bindValue(":username", username)
+    query.bindValue(":password", hashed_password)
+    query.bindValue(":yhsf", yhsf)
+    if not query.exec_():
+        print("注册失败，错误信息: " + query.lastError().text())
+        ConnectionPool.instance().release(db)
+        return 2
+    ConnectionPool.instance().release(db)
+    return 3
+def login(username, password):
+    db = ConnectionPool.instance().acquire()
+    query = QSqlQuery(db)
+
+    query.prepare("SELECT password FROM userinfo WHERE username = :username")
+    query.bindValue(":username", username)
+    if not query.exec_():
+        print("Query execution failed with error: " + query.lastError().text())
+        ConnectionPool.instance().release(db)
+        return False
+
+    if query.next():
+        stored_password = query.value(0)
+        if stored_password == hash_password(password):
+            print("登录成功")
+            ConnectionPool.instance().release(db)
+            return True
+        else:
+            print("密码错误")
+    else:
+        print("用户名不存在")
+
+    ConnectionPool.instance().release(db)
+    return False
+
+
+

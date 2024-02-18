@@ -1,7 +1,3 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 """
 @ProjectName: ${IQA_Soft_ware}
 @Author  : elona
@@ -45,44 +41,15 @@ from Page_Regist import Ui_Regist
 
 
 
-#登录页
 class Login(QMainWindow,Ui_Dialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.admin = "admin"
-        self.Password = "123456"
-        self.login_button.clicked.connect(self.login)
-        self.regist_button.clicked.connect(self.show_regist)
-    def login(self):
-        if self.lineEdit.text() == "":
-            QMessageBox.warning(self, '警告', '密码不能为空，请输入！')
-            return None
-        if (self.lineEdit.text() == self.Password) and self.lineEdit_2.text() == self.admin:
-            # 1打开新窗口
-            self.switch_window.emit()
-            # 2关闭本窗口
-            self.close()
-        else:
-            QMessageBox.critical(self, '错误', '密码错误！')
-            self.lineEdit.clear()
-            return None
-    def show_regist(self):
-            # 1打开新窗口
-            self.switch_windowto_regist.emit()
-            # 2关闭本窗口
-            self.close()
 class Regist(QMainWindow,Ui_Regist):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.register_button.clicked.connect(self.regist)
-    def regist(self):
-        print("66")
-
 class MainWindow(QMainWindow,Ui_Home):
-
-
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -143,6 +110,7 @@ class Controller:
     def show_Regist(self):
         self.window_Regist = Regist()
         self.window_Regist.show()
+        self.window_Regist.switch_window_toLogin.connect(self.show_Login)
 
 
 
@@ -194,6 +162,15 @@ class Controller:
         else:
             Ui_Home.update_task(self.window_Main,row)
         self.window_Main.show()
+    def back_to_Login_fromRegist(self):
+        self.window_Regist.close()
+        #判断是否从新建主任务点完成，是的话就直接添加 如果是点编辑就调用更新函数（区别在于更新函数没有insertrow） viewmodel操作
+        if row is None:
+            Ui_Home.add_task(self.window_Main)
+        else:
+            Ui_Home.update_task(self.window_Main,row)
+        self.window_Main.show()
+
 
 
 

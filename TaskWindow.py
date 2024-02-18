@@ -128,20 +128,25 @@ class TaskWindow(QWidget):
         subtask_data = Database.selectall_subdataById(self.row)
         if not subtask_data:
             QMessageBox.warning(self, '提示', '未选择算法')
+            return
             # raise NameError("algname is not defined")
+        param = Database.get_param_from_database()
         for subtask in subtask_data:
             subid = subtask["Subid"]
 
             global algname
-            param = Database.get_param_from_database()
             algname = subtask["Alg_Name"]
-            # alpha = float(subtask["alpha"])
-            # kernel_size = int(subtask["kernel_size"])
-            # iterations = int(subtask["iterations"])
+            # 自己配置
+            # my_list = ['a', 'b', 'c']
+            # my_dict = {item: index + 1 for index, item in enumerate(my_list)}
+
+            alpha = float(subtask["alpha"])
+            kernel_size = int(subtask["kernel_size"])
+            iterations = int(subtask["iterations"])
 
             # 创建ImageEnhancement实例并执行图像增强操作
 
-            image_enhancement = ImageEnhancement(input_folder, output_folder, algname, param)
+            image_enhancement = ImageEnhancement(input_folder, output_folder, algname, param,alpha,kernel_size,iterations)
             image_enhancement.apply_image_enhancement()
 
 

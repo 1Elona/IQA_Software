@@ -651,6 +651,7 @@ class Ui_Home(object):
         self.thread.start()
         # 开始执行
         task.status_change()
+        # self.thread.exit(200)
 
 
 

@@ -117,18 +117,19 @@ import handleuserinput
 import Database
 
 class ImageEnhancement:
-    def __init__(self, input_folder, output_folder, algname,params):
+    def __init__(self, input_folder, output_folder, algname,params,alpha,kernel_size,iterations):
         self.data = Util.get_data_from_config(algname)
         self.input_folder = input_folder
         self.output_folder = output_folder
         self.algname = algname
         self.params = params
-        # self.alpha = alpha
-        # self.kernel_size = kernel_size
-        # self.iterations = iterations
+        self.alpha = alpha
+        self.kernel_size = kernel_size
+        self.iterations = iterations
         self.filters = {
             "EXAMPLE": self.example_filter,
-            "THRESHOLD": self.threshold_filter,
+            "THRESHOLD": self.threshold_filter
+
         }
 
     def is_valid(self, value, range_str):
@@ -156,10 +157,10 @@ class ImageEnhancement:
 
     def example_filter(self, image):
         #如何去使用这个参数由管理员自己决定
-        print('该算法收到的param列表:',self.param,sep=' ')
-        alpha = self.params[0]
-        kernel_size = self.params[1]  # 获取kernel_size参数，如果不存在就使用默认值5
-        iterations = self.params[2]  # 获取iterations参
+        # print('该算法收到的param列表:',self.params,sep=' ')
+        alpha = self.alpha
+        kernel_size = self.kernel_size  # 获取kernel_size参数，如果不存在就使用默认值5
+        iterations = self.iterations  # 获取iterations参
         filtered = cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
         return self.iterative_filter(filtered)
 
@@ -173,21 +174,21 @@ class ImageEnhancement:
         _, filtered = cv2.threshold(image, self.threshold, 255, cv2.THRESH_BINARY)
         return self.iterative_filter(filtered)
 
-    def process_image(self, file):
-        try:
-            if self.is_image_file(file):
-                input_file = os.path.join(self.input_folder, file)
-                file_name, file_ext = os.path.splitext(file)
-                output_file = os.path.join(self.output_folder,
-                                           f"{file_name}%%{self.algname}%%{self.alpha}%%{self.iterations}%%{self.kernel_size}{file_ext}")
-                if os.path.basename(output_file) in os.listdir(self.output_folder):
-                    return
-
-                img = cv2.imread(input_file, -1)
-                filtered_img = self.apply_filter(img)
-                cv2.imwrite(output_file, filtered_img)
-        except Exception as e:
-            print(f"文件{input_file}可能出问题", e)
+    # def process_image(self, file):
+    #     try:
+    #         if self.is_image_file(file):
+    #             input_file = os.path.join(self.input_folder, file)
+    #             file_name, file_ext = os.path.splitext(file)
+    #             output_file = os.path.join(self.output_folder,
+    #                                        f"{file_name}%%{self.algname}%%{self.alpha}%%{self.iterations}%%{self.kernel_size}{file_ext}")
+    #             if os.path.basename(output_file) in os.listdir(self.output_folder):
+    #                 return
+    #
+    #             img = cv2.imread(input_file, -1)
+    #             filtered_img = self.apply_filter(img)
+    #             cv2.imwrite(output_file, filtered_img)
+    #     except Exception as e:
+    #         print(f"文件{input_file}可能出问题", e)
 
     def is_image_file(self, file):
         return file.endswith('.jpg') or file.endswith('.png')
@@ -235,26 +236,4 @@ class ImageEnhancement:
     #             continue
     #
 
-
-
-
-# 从数据库中获取数据并进行测试
-def test_image_enhancement(row):
-    input_folder = Database.selectMaintaskByRow(row)["input"]
-    output_folder = Database.selectMaintaskByRow(row)["output"]
-    subtask_data = Database.selectall_subdataById(row)
-
-    for subtask in subtask_data:
-        subid = subtask["Subid"]
-        algname = subtask["Alg_Name"]
-        alpha = float(subtask["alpha"])
-        kernel_size = int(subtask["kernel_size"])
-        iterations = int(subtask["iterations"])
-
-        # 创建ImageEnhancement实例并执行图像增强操作
-        image_enhancement = ImageEnhancement(input_folder, output_folder, algname, alpha, kernel_size, iterations)
-        result = image_enhancement.apply_image_enhancement()
-
-        # 保存测试结果到数据库
-        Database.updateResultById(row, subid, json.dumps(result))
 

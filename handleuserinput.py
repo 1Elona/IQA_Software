@@ -19,8 +19,9 @@ def get_groupdata(data):
     :return:
     '''
     result = []
-
+    print(data,"66666666")
     for x in data:
+        print(x, "7777777")
         if x[1].isdigit():# x[1]是只有数字（整数）
             for i in np.arange(int(x[0].split('-')[0]),int(x[0].split('-')[1])+1,int(x[1])):
                 result.append(i)

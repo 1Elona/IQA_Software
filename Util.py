@@ -63,7 +63,7 @@ def crossjoin(my_dict):
 
     return result_list
 
-
+# 初始化配置信息 json
 def initConfig():
     # 范例
     import os
@@ -82,7 +82,6 @@ def initConfig():
     }
 
     # 指定你的 JSON 文件的路径（数据库和config.json都在该路径下）
-
     json_file_path = os.path.join(unify_path().user_path,"config.json")
 
     # 确保目录存在
