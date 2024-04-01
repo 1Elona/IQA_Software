@@ -1,0 +1,27 @@
+{
+  "alglist": [
+    {
+      "EXAMPLE": {
+        "param": {
+          "alpha": "(0,1]",
+          "kernel_size": "[3,11]",
+          "iterations": "[100,1000]"
+        }
+      },
+      "REMOVE_WHITE_LINE": {
+        "param": {
+          "thresh_value": "(0,255]",
+          "kernel_size": "[3,11]",
+          "morph_kernel_size": "[3,11]"
+        }
+      },
+      "ENHANCED_CONTRAST": {
+        "param": {
+          "clip_limit": "[1,10]",
+          "tile_grid_size": "[4,12]",
+          "apply_on_color": "[0,1]"
+        }
+      }
+    }
+  ]
+}
