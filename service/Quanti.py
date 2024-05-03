@@ -257,7 +257,7 @@ def quant(progress_signal,alg_index_num,row,subid,inputf,outputf):
 
     f.close()
     get_loss(progress_signal,alg_index_num,inputf,outputf,row,csvname)
-
+    return csvname
 
 
 

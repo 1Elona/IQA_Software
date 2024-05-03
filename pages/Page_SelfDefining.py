@@ -37,7 +37,7 @@ class Ui_SelfDefining(object):
     switch_window_5 = QtCore.pyqtSignal()
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1047, 734)
+        MainWindow.resize(500, 400)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -87,15 +87,15 @@ class Ui_SelfDefining(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
 
 
-        self.tableWidget = QtWidgets.QTableWidget(self.frame)
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(6)
-        li = ['序号', '算法名', '更多参数', '操作']
-        j = 1
-        for i in range(2, 2 + Ui_Home.num_columns):
-            li.insert(i,str(f'p{j}'))
-            j +=1
-        self.tableWidget.setHorizontalHeaderLabels(li)
+        # self.tableWidget = QtWidgets.QTableWidget(self.frame)
+        # self.tableWidget.setObjectName("tableWidget")
+        # self.tableWidget.setColumnCount(6)
+        # li = ['序号', '算法名', '更多参数', '操作']
+        # j = 1
+        # for i in range(2, 2 + Ui_Home.num_columns):
+        #     li.insert(i,str(f'p{j}'))
+        #     j +=1
+        # self.tableWidget.setHorizontalHeaderLabels(li)
 
         # item = QtWidgets.QTableWidgetItem()
         # self.tableWidget.setVerticalHeaderItem(0, item)
@@ -111,24 +111,24 @@ class Ui_SelfDefining(object):
         # self.tableWidget.setHorizontalHeaderItem(2, item)
         # item = QtWidgets.QTableWidgetItem()
         # self.tableWidget.setHorizontalHeaderItem(3, item)
-        self.horizontalLayout_3.addWidget(self.tableWidget)
+        # self.horizontalLayout_3.addWidget(self.tableWidget)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         spacerItem1 = QtWidgets.QSpacerItem(329, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem1)
-        self.Button_up_1 = QtWidgets.QPushButton(self.frame)
-        self.Button_up_1.setObjectName("Button_up_1")
-        self.horizontalLayout_4.addWidget(self.Button_up_1)
+        # self.Button_up_1 = QtWidgets.QPushButton(self.frame)
+        # self.Button_up_1.setObjectName("Button_up_1")
+        # self.horizontalLayout_4.addWidget(self.Button_up_1)
         self.label_2 = QtWidgets.QLabel(self.frame)
         self.label_2.setEnabled(True)
         self.label_2.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_4.addWidget(self.label_2)
-        self.Button_down_1 = QtWidgets.QPushButton(self.frame)
-        self.Button_down_1.setObjectName("Button_down_1")
-        self.horizontalLayout_4.addWidget(self.Button_down_1)
+        # self.Button_down_1 = QtWidgets.QPushButton(self.frame)
+        # self.Button_down_1.setObjectName("Button_down_1")
+        # self.horizontalLayout_4.addWidget(self.Button_down_1)
         spacerItem2 = QtWidgets.QSpacerItem(329, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem2)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
@@ -162,10 +162,6 @@ class Ui_SelfDefining(object):
         #下一步
         self.pushButton_2.clicked.connect(self.SelfDefiningToIndex)
 
-        # #上一步
-        # self.pushButton.clicked.connect(self.SelfDefiningToNewMaintask)
-        #
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -179,25 +175,6 @@ class Ui_SelfDefining(object):
         for i,algname in enumerate(util.Util.get_algname_from_config()):
             self.comboBox.setItemText(i, _translate("MainWindow", algname))
         self.pushButton_4.setText(_translate("MainWindow", "算法设置"))
-        # item = self.tableWidget.verticalHeaderItem(0)
-        # item.setText(_translate("MainWindow", "新建行"))
-        # item = self.tableWidget.verticalHeaderItem(1)
-        # item.setText(_translate("MainWindow", "新建行"))
-        # item = self.tableWidget.verticalHeaderItem(2)
-        # item.setText(_translate("MainWindow", "新建行"))
-        # item = self.tableWidget.horizontalHeaderItem(0)
-        # item.setText(_translate("MainWindow", "新建列"))
-        # item = self.tableWidget.horizontalHeaderItem(1)
-        # item.setText(_translate("MainWindow", "新建列"))
-        # item = self.tableWidget.horizontalHeaderItem(2)
-        # item.setText(_translate("MainWindow", "新建列"))
-        # item = self.tableWidget.horizontalHeaderItem(3)
-        # item.setText(_translate("MainWindow", "新建列"))
-        #
-        self.Button_up_1.setText(_translate("MainWindow", "上一页"))
-        self.label_2.setText(_translate("MainWindow", "1/5"))
-        self.Button_down_1.setText(_translate("MainWindow", "下一页"))
-        # self.pushButton.setText(_translate("MainWindow", "上一步"))
         self.pushButton_2.setText(_translate("MainWindow", "下一步"))
         self.pushButton_3.setText(_translate("MainWindow", "完成"))
 
@@ -209,14 +186,9 @@ class Ui_SelfDefining(object):
         self.switch_window_2.emit(self.comboBox.currentText())
     def SelfDefiningToIndex(self):
         self.switch_window_3.emit()
-    # def SelfDefiningToNewMaintask(self):
-    #     self.switch_window_4.emit()
-
     def add_task(self,row,dic,algoname):
         print("正在添加子任务中------")
         print("当前参数",dic)
-        # {'alpha': {'data_1': [1, 2, 3], 'data_2': [5.0, 5.5]}, 'kernel_size': {'data_1': [1, 2, 3]},
-        #  'iterations': {'data_1': [100, 150, 200, 250, 300]}}
         print("当前算法名",algoname) # EXAMPLE
         mainTask = Database.selectMaintaskByRow(row, Ui_Home.username)
         self.choose_algo = algoname
@@ -265,7 +237,6 @@ class Ui_SelfDefining(object):
 
         index = Database.create_SubTaskDatabase(user_input,Ui_Home.username,id)
 
-        #[{'alpha': 1, 'kernel_size': 1, 'iterations': 100}, {'alpha': 1, 'kernel_size': 1, 'iterations': 150}, 。。。]
         #执行时间  #默认NULL
         execute_time = "NULL"
         #选择的指标 #还未添加该功能
@@ -277,12 +248,6 @@ class Ui_SelfDefining(object):
         self.tableWidget.setItem(row_count, 0,QTableWidgetItem(str(row_count+1)))
         #获取选择的算法名的值
         self.tableWidget.setItem(row_count, 1, QTableWidgetItem(self.comboBox.currentText()))
-
-        # for i in range(0,Page_Home.Ui_Home.num_columns):#012
-        #     dictionary[f'p{i+1}'] = random.randint(1,10)
-        #     self.tableWidget.setItem(row_count, i+2,QTableWidgetItem(dictionary[f'p{i+1}']))
-        #     user_input.append(dictionary[f'p{i+1}'])
-
         tk_name = mainTask['task_name']
 
 

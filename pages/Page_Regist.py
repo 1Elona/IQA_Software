@@ -48,12 +48,12 @@ class Ui_Regist(object):
         self.password_label.setObjectName("password_label")
 
         # 身份标签
-        self.identity_comboBox = QtWidgets.QComboBox(Dialog)
-        self.identity_comboBox.setGeometry(QtCore.QRect(270, 300, 150, 40))  # 设置位置和大小
-        self.identity_comboBox.setFont(font)
-        self.identity_comboBox.setObjectName("identity_comboBox")
-        self.identity_comboBox.addItem("一般用户")
-        self.identity_comboBox.addItem("管理员")
+        # self.identity_comboBox = QtWidgets.QComboBox(Dialog)
+        # self.identity_comboBox.setGeometry(QtCore.QRect(270, 300, 150, 40))  # 设置位置和大小
+        # self.identity_comboBox.setFont(font)
+        # self.identity_comboBox.setObjectName("identity_comboBox")
+        # self.identity_comboBox.addItem("一般用户")
+        # self.identity_comboBox.addItem("管理员")
 
         # 设置注册按钮
         self.register_button = QtWidgets.QPushButton(Dialog)
@@ -117,11 +117,10 @@ class Ui_Regist(object):
     def regist_to_login(self):
         username = self.username_lineEdit.text()
         password = self.password_lineEdit.text()
-        yhsf = self.identity_comboBox.currentText()
         if self.username_lineEdit.text() == "" or self.password_lineEdit.text()=="" or self.identity_comboBox.currentText() =="":
             PyQt5.QtWidgets.QMessageBox.warning(self, '警告', '请检查输入框是否为空，请输入！')
             return None
-        zt = Database.registPerson(username, password, yhsf)
+        zt = Database.registPerson(username, password, "一般用户")
         if zt==3:
             PyQt5.QtWidgets.QMessageBox.warning(self, '提示', '注册成功！')
             self.switch_window_to_login.emit()

@@ -4,9 +4,9 @@ import traceback
 
 import cv2
 import numpy as np
+import cv2
 
 
-# Adjusted to match the parameters passed from the AlgorithmExecutor
 # 数据库查出来的都是字符串需要对应自适应转换
 def convert_str_to_number(value):
     try:
@@ -65,10 +65,41 @@ def REMOVE_WHITE_LINE(input_image_path, thresh_value=200, kernel_size=15, morph_
     # 返回处理后的图像
     return processed_image
 
+def ENHANCED_CONTRAST(image, clip_limit=2.0, tile_grid_size=8, contrast_alpha=0.5):
+    """
+    使用CLAHE来执行直方图均衡化的增强版。
+    ...
+    """
+    # 确保参数是正确的数值类型
+    clip_limit = convert_str_to_number(clip_limit)
+    tile_grid_size = convert_str_to_number(tile_grid_size)
+    contrast_alpha = convert_str_to_number(contrast_alpha)
 
-import cv2
+    # 创建CLAHE对象
+    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(tile_grid_size, tile_grid_size))
 
+    if image.ndim == 3:  # 如果图像是彩色的
+        # 转换图像到YCrCb色彩空间
+        ycrcb_img = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+        y, cr, cb = cv2.split(ycrcb_img)
 
+        # 应用CLAHE到Y（亮度）通道
+        y_eq = clahe.apply(y)
+
+        # 融合原始亮度通道和增强的亮度通道
+        y_blended = np.clip((1.0 - contrast_alpha) * y.astype('float32') + contrast_alpha * y_eq.astype('float32'), 0,
+                            255).astype('uint8')
+
+        # 合并通道
+        merged_ycrcb = cv2.merge((y_blended, cr, cb))
+
+        # 转换回BGR色彩空间
+        equalized_image = cv2.cvtColor(merged_ycrcb, cv2.COLOR_YCrCb2BGR)
+    else:  # 如果图像是灰度的
+        # 直接应用CLAHE
+        equalized_image = clahe.apply(image)
+
+    return equalized_image
 # def ENHANCED_CONTRAST(image, clip_limit=2.0, tile_grid_size=8, apply_on_color=1):
 #     """
 #     使用CLAHE来执行直方图均衡化的增强版。
@@ -107,49 +138,49 @@ import cv2
 #         equalized_image = clahe.apply(image)
 #
 #     return equalized_image
-def ENHANCED_CONTRAST(image, clip_limit=2.0, tile_grid_size=8, apply_on_color=1):
-    """
-    使用CLAHE来执行直方图均衡化的增强版。
-
-    如果 apply_on_color 设为 1 并且输入是彩色图，会对 YCrCb 色彩空间的亮度通道（Y通道）应用CLAHE，
-    并将处理后的亮度通道与未处理的色度通道（CrCb通道）合成，返回合成后的彩色图像。
-    如果 apply_on_color 不为 1 或图像为灰度，将直接对图像应用CLAHE。
-
-    参数:
-    - image: 输入的图像
-    - clip_limit: 对比度的剪辑限制。
-    - tile_grid_size: 定义了网格大小。
-    - apply_on_color: 如果输入是彩色图像，并希望均衡每个颜色通道，设置此项为 1。
-
-    返回:
-    - 返回直方图均衡化后的图像。
-    """
-    # 转换参数
-    clip_limit = convert_str_to_number(clip_limit)
-    tile_grid = (convert_str_to_number(tile_grid_size), convert_str_to_number(tile_grid_size))
-
-    # 判断是否是彩色图像且需应用于颜色通道
-    if len(image.shape) == 3 and apply_on_color == 1:
-        # 将彩色图像从BGR转换到YCrCb颜色空间
-        ycrcb_img = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
-        # 分离YCrCb颜色空间的亮度和色度通道
-        y, cr, cb = cv2.split(ycrcb_img)
-
-        # 创建CLAHE对象并对亮度通道应用CLAHE
-        clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid)
-        y_eq = clahe.apply(y)
-
-        # 重新合成颜色通道
-        ycrcb_eq = cv2.merge((y_eq, cr, cb))
-        # 将图像从YCrCb转换回BGR颜色空间
-        equalized_image = cv2.cvtColor(ycrcb_eq, cv2.COLOR_YCrCb2BGR)
-    else:
-        # 如果不是彩色图像，或apply_on_color为False，则直接对图像应用CLAHE
-        gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
-        clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid)
-        equalized_image = clahe.apply(gray_img)
-
-    return equalized_image
+# def ENHANCED_CONTRAST(image, clip_limit=2.0, tile_grid_size=8, apply_on_color=1):
+#     """
+#     使用CLAHE来执行直方图均衡化的增强版。
+#
+#     如果 apply_on_color 设为 1 并且输入是彩色图，会对 YCrCb 色彩空间的亮度通道（Y通道）应用CLAHE，
+#     并将处理后的亮度通道与未处理的色度通道（CrCb通道）合成，返回合成后的彩色图像。
+#     如果 apply_on_color 不为 1 或图像为灰度，将直接对图像应用CLAHE。
+#
+#     参数:
+#     - image: 输入的图像
+#     - clip_limit: 对比度的剪辑限制。
+#     - tile_grid_size: 定义了网格大小。
+#     - apply_on_color: 如果输入是彩色图像，并希望均衡每个颜色通道，设置此项为 1。
+#
+#     返回:
+#     - 返回直方图均衡化后的图像。
+#     """
+#     # 转换参数
+#     clip_limit = convert_str_to_number(clip_limit)
+#     tile_grid = (convert_str_to_number(tile_grid_size), convert_str_to_number(tile_grid_size))
+#
+#     # 判断是否是彩色图像且需应用于颜色通道
+#     if len(image.shape) == 3 and apply_on_color == 1:
+#         # 将彩色图像从BGR转换到YCrCb颜色空间
+#         ycrcb_img = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+#         # 分离YCrCb颜色空间的亮度和色度通道
+#         y, cr, cb = cv2.split(ycrcb_img)
+#
+#         # 创建CLAHE对象并对亮度通道应用CLAHE
+#         clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid)
+#         y_eq = clahe.apply(y)
+#
+#         # 重新合成颜色通道
+#         ycrcb_eq = cv2.merge((y_eq, cr, cb))
+#         # 将图像从YCrCb转换回BGR颜色空间
+#         equalized_image = cv2.cvtColor(ycrcb_eq, cv2.COLOR_YCrCb2BGR)
+#     else:
+#         # 如果不是彩色图像，或apply_on_color为False，则直接对图像应用CLAHE
+#         gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
+#         clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid)
+#         equalized_image = clahe.apply(gray_img)
+#
+#     return equalized_image
 class AlgorithmExecutor:
     def __init__(self, input_folder, output_folder):
         self.algorithms = {}
@@ -196,6 +227,7 @@ class AlgorithmExecutor:
                 cv2.imwrite(os.path.join(self.output_folder, output_file), filtered_img)
         except Exception as e:
             traceback.print_exc()
+            # 记录到用户异常表
             print(f"该文件执行算法失败 {input_file}: {e}")
 
     def apply_image_enhancement(self):

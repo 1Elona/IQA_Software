@@ -41,7 +41,6 @@ class WorkerThread(QThread):
                 # 执行所有子任务
                 total_subtasks = len(subtask_data)
                 for i,subtask in enumerate(subtask_data):
-                    print("+++++++++++++",i,len(subtask_data))
                     alg_name = subtask['Alg_Name']
                     isDone = subtask['isDone']
                     if isDone ==1:
@@ -73,11 +72,12 @@ class WorkerThread(QThread):
                 # 注意：这里应该根据实际执行情况来更新进度
                 print("=========正在执行生成指标csv算法代码==========")
                 start_time2 = time.time()  # 程序结束时间
-                service.Quanti.quant(self.progress_signal,len(Util.get_data_from_config(alg_name)), self.row,kkk+1,inputf=input_folder, outputf=output_folder)
+                csvname = service.Quanti.quant(self.progress_signal,len(Util.get_data_from_config(alg_name)), self.row,kkk+1,inputf=input_folder, outputf=output_folder)
+
                 end_time2 = time.time()  # 程序结束时间
                 index_time = end_time2 - start_time2  # 程序的运行时间，单位为秒
                 #写回csv
-                f = open(os.path.join(Util.unify_path().user_path, 'quant.csv'), 'a', encoding='utf-8', newline='')
+                f = open(os.path.join(Util.unify_path().user_path, csvname), 'a', encoding='utf-8', newline='')
                 csv_writer = csv.writer(f)
                 title = []
                 title.extend(['===============================================已完成==============================='])

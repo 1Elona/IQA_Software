@@ -327,7 +327,7 @@ def deleteSth(username,row):
     db = ConnectionPool.instance().acquire()
     query = QSqlQuery(db)
     if not row is None:
-        prefix_name = "Subtask" + row + '_' + username
+        prefix_name = "Subtask" + str(row) + '_' + str(username)
         if query.exec_("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '{}%'".format(prefix_name)):
             # 使用一个列表收集所有表名，因为我们不能在遍历查询结果时更改数据库结构
             tables_to_drop = []

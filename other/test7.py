@@ -1,87 +1,69 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-
-# 设置字体以便支持中文（根据您系统支持的字体进行选择）
-plt.rcParams['font.sans-serif'] = ['Songti SC']
-#or
-plt.rcParams['font.sans-serif'] = ['Wawati TC']
-#or
-plt.rcParams['font.sans-serif'] = ['STHeiti']
-#or
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
-
-# 读取CSV文件
-df = pd.read_csv('../quant.csv')
-
-# 构造一个新的 DataFrame 来存储 combined 列
-combined_df = df.iloc[:, 0:5].astype(str).agg('_'.join, axis=1)
-df['combined'] = combined_df
-
-# 设置图表的颜色和选取需要绘图的指标列名称
-colors = ['red']
-metrics = df.columns[-7:]  # 最后7列为度量值
+from graphviz import Digraph
 
 
+def draw_er_diagram():
+    # 创建 Digraph 对象
+    dot = Digraph(comment='The ER Diagram')
+
+    # 添加实体
+    dot.node('Task', 'Task', shape='rectangle')
+    dot.node('SubTask', 'SubTask', shape='rectangle')
+    dot.node('User', 'User', shape='rectangle')
+
+    # 添加实体属性
+    dot.node('TaskId', 'Id (PK)', shape='ellipse')
+    dot.node('TaskName', 'task_name', shape='ellipse')
+    dot.node('TaskProgress', 'progress', shape='ellipse')
+    # 更多的 Task 属性...
+    dot.node('TaskInput', 'input', shape='ellipse')
+    dot.node('TaskOutput', 'output', shape='ellipse')
+    dot.node('TaskStatus', 'status', shape='ellipse')
+    dot.node('TaskCreateTime', 'create_time', shape='ellipse')
+    dot.node('TaskMode', 'mode', shape='ellipse')
+    dot.node('TaskDescribe', 'describe', shape='ellipse')
+    dot.node('TaskReferFolder', 'refer_folder', shape='ellipse')
+    dot.node('TaskUsername', 'username', shape='ellipse')
+    dot.node('TaskUUID', 'uuid', shape='ellipse')
+
+    # 更多的 SubTask 属性...
+    dot.node('SubTaskId', 'Subid (PK)', shape='ellipse')
+    dot.node('SubTaskName', 'Taskname', shape='ellipse')
+    dot.node('SubExecuteTime', 'Execute_Time', shape='ellipse')
+    # ...
+
+    # User属性
+    dot.node('UserId', 'id (PK, Auto)', shape='ellipse')
+    dot.node('UserUsername', 'username', shape='ellipse')
+    dot.node('UserPassword', 'password', shape='ellipse')
+    dot.node('UserYhsf', 'yhsf', shape='ellipse')
+
+    # 添加表示实体关系的菱形
+    dot.node('relUserTask', '', shape='diamond')
+    dot.node('relTaskSubTask', '', shape='diamond')
+
+    # 连接实体和关系
+    dot.edge('User', 'relUserTask')
+    dot.edge('relUserTask', 'Task')
+
+    dot.edge('Task', 'relTaskSubTask')
+    dot.edge('relTaskSubTask', 'SubTask')
+
+    # 连接实体和属性
+    # Task实体与属性连接
+    dot.edges([('Task', 'TaskId'), ('Task', 'TaskName'), ('Task', 'TaskProgress'), ('Task', 'TaskInput'),
+               ('Task', 'TaskOutput'), ('Task', 'TaskStatus'), ('Task', 'TaskCreateTime'), ('Task', 'TaskMode'),
+               ('Task', 'TaskDescribe'), ('Task', 'TaskReferFolder'), ('Task', 'TaskUsername'), ('Task', 'TaskUUID')])
+    # SubTask实体与属性连接
+    dot.edges([('SubTask', 'SubTaskId'), ('SubTask', 'SubTaskName'), ('SubTask', 'SubExecuteTime')])
+    # User实体与属性连接
+    dot.edges([('User', 'UserId'), ('User', 'UserUsername'), ('User', 'UserPassword'), ('User', 'UserYhsf')])
+
+    # 打印生成的源代码
+    print(dot.source)
+
+    # 保存和渲染图形
+    dot.render('er_diagram', format='png', view=True)
 
 
-
-
-
-
-
-
-
-# 遍历所有指标列，并为每个指标绘制图表
-for i, metric in enumerate(metrics):
-
-
-
-
-
-    plt.figure(figsize=(50, 20))  # 设置每个指标图表的大小
-
-    # ... (省略之前的代码)
-
-    # 获取度量数据并计算最大值和最小值来设定步长
-    df[metric] = pd.to_numeric(df[metric], errors='coerce')
-    y_min, y_max = df[metric].min(), df[metric].max()
-
-    # 动态设置步长，确保最小步长为一个较小的正数
-    min_step = 0.01  # 设定一个最小步长阈值，避免步长为零
-    if y_max - y_min > 1:
-        step = 0.5
-    elif y_max - y_min > 0.1:
-        step = 0.1
-    else:
-        step = min_step  # 如果计算出的步长太小，使用最小步长阈值
-
-    # 确保步长不为零
-    step = max(step, min_step)
-
-    # 设置 y 轴的步长
-    plt.yticks(np.arange(np.floor(y_min), np.ceil(y_max) + step, step))
-
-    # 绘制数据
-    plt.plot(df['combined'], df[metric], linestyle='-', marker='o', linewidth=2, label=metric,
-             color=colors[0])
-
-    # 绘图后添加标题、轴标签和图例
-    plt.title(metric + ' vs Combined Parameters')
-    plt.xlabel('Combined Parameters')
-    plt.ylabel(metric)
-    plt.legend()  # 将图例放在合适的位置
-
-    # 设置图标布局优化和x轴标签的旋转，以确保标签不重叠
-    plt.xticks(rotation=45, ha='right')  # ha参数用于设置对齐方式
-    plt.tight_layout()
-    plt.grid(True)  # 显示网格线
-
-    # 调整坐标轴标签之间的间隔
-    ax = plt.gca()  # 获取当前图表的坐标轴信息
-    ax.tick_params(axis='x', which='major', pad=15)  # 增加x轴标签与刻度线之间的距离
-    ax.tick_params(axis='y', which='major', pad=15)  # 增加y轴标签与刻度线之间的距离
-
-    # 保存每个指标的图表到文件
-    filename = f'chart_{metric}.png'
-    plt.savefig(filename)
+if __name__ == '__main__':
+    draw_er_diagram()

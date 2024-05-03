@@ -17,9 +17,9 @@
       },
       "ENHANCED_CONTRAST": {
         "param": {
-          "clip_limit": "[1,10]",
-          "tile_grid_size": "[4,12]",
-          "apply_on_color": "[0,1]"
+          "clip_limit": "[1,4]",
+          "tile_grid_size": "[8,16]",
+          "contrast_alpha": "[0,1]"
         }
       }
     }

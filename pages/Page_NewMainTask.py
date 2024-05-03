@@ -160,9 +160,9 @@ class Ui_NewMaintask(object):
         self.label_7.setFont(font)
         self.label_7.setObjectName("label_7")
         self.horizontalLayout_4.addWidget(self.label_7)
-        self.pushButton_3 = QtWidgets.QPushButton(self.frame)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.horizontalLayout_4.addWidget(self.pushButton_3)
+        # self.pushButton_3 = QtWidgets.QPushButton(self.frame)
+        # self.pushButton_3.setObjectName("pushButton_3")
+        # self.horizontalLayout_4.addWidget(self.pushButton_3)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem4)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
@@ -219,12 +219,12 @@ class Ui_NewMaintask(object):
         self.label_xing_4.setText(_translate("MainWindow", "*"))
         self.label_6.setText(_translate("MainWindow", "输出文件夹："))
         self.pushButton_2.setText(_translate("MainWindow", "选择文件"))
-        self.label_7.setText(_translate("MainWindow", "参考文件夹：   "))
-        self.pushButton_3.setText(_translate("MainWindow", "选择文件"))
+        # self.label_7.setText(_translate("MainWindow", "参考文件夹：   "))
+        # self.pushButton_3.setText(_translate("MainWindow", "选择文件"))
 
         self.pushButton.clicked.connect(self.open_folder)
         self.pushButton_2.clicked.connect(self.open_folder)
-        self.pushButton_3.clicked.connect(self.open_folder)
+        # self.pushButton_3.clicked.connect(self.open_folder)
 
         self.textEdit.setHtml(_translate("MainWindow",
                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
